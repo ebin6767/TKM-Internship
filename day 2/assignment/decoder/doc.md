@@ -54,8 +54,8 @@ Only one output line is activated for each valid input combination.
 - Input `10` → Output `0100`
 - Input `11` → Output `1000`
 
-The output changes immediately because this is a **combinational circuit**.
+## output waveform
+<img width="1595" height="542" alt="image" src="https://github.com/user-attachments/assets/270cdad3-dac7-471e-8463-5198c4dbd47e" />
 
----
 
 
