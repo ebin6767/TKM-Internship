@@ -38,11 +38,11 @@ cout → Final carry-out
 🧪 Test Cases
 
 A	B	Cin	Sum	Cout	Description
-0000	0000	0	0000	0	Reset
-0010	0100	0	0110	0	Simple addition
-0010	0100	1	0111	0	With carry-in
-1110	0110	1	0111	1	Overflow case
-0011	1100	1	0000	1	Full carry propagation
+|0000	|0000 |	0|	0000|	0|	Reset|
+|0010 |0100 |	0|	0110|	0|	Simple addition|
+|0010 |0100 |	1|	0111|	0|	With carry-in|
+|1110 |0110 |	1|	0111|	1|	Overflow case|
+|0011 |1100 |	1|	0000|	1|	Full carry propagation|
 
 📊 Waveform Explanation
 
