@@ -1,52 +1,42 @@
-`include "interface.sv"
-`include "transaction.sv"
-`include "generator.sv"
-`include "driver.sv"
-`include "monitor.sv"
-`include "scoreboard.sv"
-`include "environment.sv"
-`include "test.sv"
+module apb_slave (
+    input  wire        pclk,
+    input  wire        presetn,
+    input  wire [31:0] paddr,
+    input  wire        pwrite,
+    input  wire        psel,
+    input  wire        penable,
+    input  wire [31:0] pwdata,
+    output reg  [31:0] prdata,
+    output reg         pready,
+    output wire        pslverr
+);
 
-module testbench;
-    logic pclk;
-    logic presetn;
+    // Simple 256-word memory
+    reg [31:0] mem [0:255];
+    
+    // Tie off error signal for this simple memory implementation
+    assign pslverr = 1'b0; 
 
-    // Clock generation
-    always #5 pclk = ~pclk;
-
-    // Interface instantiation
-    apb_if intf(pclk, presetn);
-
-    // DUT instantiation
-    apb_slave dut (
-        .pclk(intf.pclk),
-        .presetn(intf.presetn),
-        .paddr(intf.paddr),
-        .pwrite(intf.pwrite),
-        .psel(intf.psel),
-        .penable(intf.penable),
-        .pwdata(intf.pwdata),
-        .prdata(intf.prdata),
-        .pready(intf.pready),
-        .pslverr(intf.pslverr)
-    );
-
-    test t1;
-
-    initial begin
-        pclk = 0;
-        presetn = 0;
-        
-        // Reset sequence
-        #15 presetn = 1;
-        
-        t1 = new(intf);
-        t1.run();
-    end
-
-    // Enable wave dumps for EDA Playground
-    initial begin
-        $dumpfile("dump.vcd");
-        $dumpvars;
+    always @(posedge pclk or negedge presetn) begin
+        if (!presetn) begin
+            prdata <= 32'h0;
+            pready <= 1'b0;
+        end else begin
+            // Default ready state
+            pready <= 1'b0;
+            
+            // ACCESS Phase: PSEL and PENABLE are high
+            if (psel && penable) begin
+                pready <= 1'b1; // Assert PREADY to complete transfer
+                
+                if (pwrite) begin
+                    // Write Operation
+                    mem[paddr[7:0]] <= pwdata;
+                end else begin
+                    // Read Operation
+                    prdata <= mem[paddr[7:0]];
+                end
+            end
+        end
     end
 endmodule
