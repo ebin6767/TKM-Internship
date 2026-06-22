@@ -55,7 +55,7 @@ TKM_INTERNSHIP
 - FIFO Use Case
 
 ### Day 4
--Block Memory Generator (8x8)
+- Block Memory Generator (8x8)
 
 ## Technologies Used
 - Verilog HDL
