@@ -43,26 +43,24 @@ TKM_INTERNSHIP
 ### Day 1
 - 4-Bit Ripple Carry Adder
 - BCD Counter
--
+
 ### Day 2
-D Flip-Flop
-4x2 Encoder
-SR Flip-Flop
-Universal Shift Register
+- D Flip-Flop
+- 4x2 Encoder
+- SR Flip-Flop
+- Universal Shift Register
 
 ### Day 3
-Sequence Detector (1110)
-FIFO Use Case
+- Sequence Detector (1110)
+- FIFO Use Case
 
 ### Day 4
-Block Memory Generator (8x8)
+-Block Memory Generator (8x8)
 
 ## Technologies Used
-
 - Verilog HDL
 - Vivado Design Suite
 - GitHub
 
 ## Purpose
-
 This repository is maintained to document and organize all designs, simulations, testbenches, and reports completed during the internship.
