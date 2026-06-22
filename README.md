@@ -57,6 +57,13 @@ TKM_INTERNSHIP
 ### Day 4
 - Block Memory Generator (8x8)
 
+### Day 5
+- BCD adder interface
+- FIFO interface
+
+### Day 6
+- 
+
 ## Technologies Used
 - Verilog HDL
 - Vivado Design Suite
