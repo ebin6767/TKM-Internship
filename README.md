@@ -62,7 +62,10 @@ TKM_INTERNSHIP
 - FIFO interface
 
 ### Day 6
-- 
+- FIFO transaction
+
+### Day 7
+- APB
 
 ## Technologies Used
 - Verilog HDL
