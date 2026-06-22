@@ -1,4 +1,4 @@
-##AXI4 Crossbar Verification Suite
+## AXI4 Crossbar Verification Suite
 
 Project Description: This repository holds the verification framework for a highly performant AXI4 Crossbar Interconnect. The crossbar itself is an adaptable design that allows for concurrent transactions between multiple masters and slaves with the capability to adaptively arbitrate and monitor errors. The verification group worked diligently to validate that the crossbar was reliable, protocol-compliant, and stress tolerant, performing with no deadlocks or protocol errors.
 
@@ -6,23 +6,23 @@ Verification Technique: The verification approach uses a modular agents-based ap
 
 <img width="717" height="418" alt="17821561096602191688750515354411" src="https://github.com/user-attachments/assets/6445dd98-3671-4139-933b-ff3bb3a3a13a" />
 
-##Verification Modules Verification of key components:
+## Verification Modules Verification of key components:
 
 - AXICB Master Driver (axicb_master_driver.sv)
-  ° This is a SystemVerilog module to create bursts of transactions.
-  ° drive_write_burst(addr, burst_len, master_id) task performs address, data, and response phases of the transaction for testing arbitration and ordering.
+  - This is a SystemVerilog module to create bursts of transactions.
+  - drive_write_burst(addr, burst_len, master_id) task performs address, data, and response phases of the transaction for testing arbitration and ordering.
 - Adaptive Arbiter Monitor
-  ° This module verifies dynamic change of priorities according to traffic.
+  - This module verifies dynamic change of priorities according to traffic.
 - AXI Response Monitor (axicb_resp_monitor)
-  ° This monitors error responses (SLVERR/DECERR).
+  - This monitors error responses (SLVERR/DECERR).
 - Timeout Detector
-  ° It has separate counters for read/write transactions.
+  - It has separate counters for read/write transactions.
 
- ##Verification Scenarios: Starvation Flood: High-priority masters flood the switch to check that the low-priority masters complete their tasks without any deadlocks. Matrix Congestion: Simulates cross-routing at the same time to check the non-blocking nature of the fabric and also that there is no data leakage. Slave Backpressure: Simulates backpressure on the slaves by high latency weights (upto 6 cycles) to check the "Ready" signal deassertion on the switch.
+ #verification Scenarios: Starvation Flood: High-priority masters flood the switch to check that the low-priority masters complete their tasks without any deadlocks. Matrix Congestion: Simulates cross-routing at the same time to check the non-blocking nature of the fabric and also that there is no data leakage. Slave Backpressure: Simulates backpressure on the slaves by high latency weights (upto 6 cycles) to check the "Ready" signal deassertion on the switch.
 
  Final Results of Verification
 
-##Stability: System has absolute stability in 100% saturation bandwidth.
+#Stability: System has absolute stability in 100% saturation bandwidth.
 Performance: System has completed 100% of 16-beats bursts with very extreme asymmetric pipeline delays.
 Reliability: System is 100% deadlock free, and there
 
