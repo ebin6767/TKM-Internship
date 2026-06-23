@@ -67,6 +67,9 @@ TKM_INTERNSHIP
 ### Day 7
 - APB
 
+### FINAL PROJECT
+- AXI CROSSBAR
+
 ## Technologies Used
 - Verilog HDL
 - Vivado Design Suite
