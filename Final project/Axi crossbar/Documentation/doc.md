@@ -1,37 +1,101 @@
-## AXI4 Crossbar Verification Suite
+<img width="1245" height="591" alt="17822016270907423676128194679377" src="https://github.com/user-attachments/assets/fabaa73c-95a1-4d10-bc61-b73cf43d269b" />
 
-Project Description: This repository holds the verification framework for a highly performant AXI4 Crossbar Interconnect. The crossbar itself is an adaptable design that allows for concurrent transactions between multiple masters and slaves with the capability to adaptively arbitrate and monitor errors. The verification group worked diligently to validate that the crossbar was reliable, protocol-compliant, and stress tolerant, performing with no deadlocks or protocol errors.
+<img width="1249" height="584" alt="17822016525844981838456674480048" src="https://github.com/user-attachments/assets/eceb5ee7-e39b-4e2c-bfc4-58310e73e481" />
 
-Verification Technique: The verification approach uses a modular agents-based approach for modeling the 4x4 AXI system. Modular Agents: Independent Master drivers and Slave responders for separate channel controls (AW, W, B, AR, and R). Stress Injection: Concentrates on “corner cases” of traffic like starvation floods, matrix congestion, and backpressure. Protocol Validation: Verification of AXI handshake and non-blocking fabric behavior under multi-master accesses.
+<img width="1252" height="585" alt="17822017159361643659355073521763" src="https://github.com/user-attachments/assets/00fe1902-e887-4751-9cff-5004370c7448" />
 
-<img width="717" height="418" alt="17821561096602191688750515354411" src="https://github.com/user-attachments/assets/6445dd98-3671-4139-933b-ff3bb3a3a13a" />
+<img width="1242" height="196" alt="17822017397071270313203927260378" src="https://github.com/user-attachments/assets/d161edb8-9435-49b7-89b6-3cec072f71b8" />
 
-## Verification Modules Verification of key components:
 
-- AXICB Master Driver (axicb_master_driver.sv)
-  - This is a SystemVerilog module to create bursts of transactions.
-  - drive_write_burst(addr, burst_len, master_id) task performs address, data, and response phases of the transaction for testing arbitration and ordering.
-- Adaptive Arbiter Monitor
-  - This module verifies dynamic change of priorities according to traffic.
-- AXI Response Monitor (axicb_resp_monitor)
-  - This monitors error responses (SLVERR/DECERR).
-- Timeout Detector
-  - It has separate counters for read/write transactions.
+<img width="863" height="425" alt="17822017678416675071756341636953" src="https://github.com/user-attachments/assets/27a06db1-9dd6-44e9-8ad2-4cc5f00697db" />
 
- #verification Scenarios: Starvation Flood: High-priority masters flood the switch to check that the low-priority masters complete their tasks without any deadlocks. Matrix Congestion: Simulates cross-routing at the same time to check the non-blocking nature of the fabric and also that there is no data leakage. Slave Backpressure: Simulates backpressure on the slaves by high latency weights (upto 6 cycles) to check the "Ready" signal deassertion on the switch.
+# AXI4 Crossbar with Adaptive Fairness Arbitration and Reliability Enhancements
 
- Final Results of Verification
+# Project Overview
 
-#Stability: System has absolute stability in 100% saturation bandwidth.
-Performance: System has completed 100% of 16-beats bursts with very extreme asymmetric pipeline delays.
-Reliability: System is 100% deadlock free, and there
+This project extends an open-source AXI4/AXI4-Lite Crossbar Interconnect by introducing adaptive arbitration, runtime monitoring, response error tracking, and transaction timeout handling. In addition to the design enhancements, a comprehensive verification framework was developed to validate functionality, protocol compliance, fairness, reliability, and performance under heavy traffic conditions.
 
-1. Test Case 1: Starvation & Priority Arbitration What we see: The i_awch (Master Write Address Channel) shows transactions starting early in the timeline (around the 5-10µs mark). You can see the e0a06020 pattern evolving into 1a152010. The Result: The o_awvalid and o_awready signals on the slave side show that the crossbar successfully routed these requests to the appropriate slaves. The arbiter is clearly functioning because multiple i_awvalid pulses are being "serialized" by the DUT before reaching the output ports, confirming priority-based arbitration is active.
+The original crossbar provides configurable M×N AXI interconnect functionality with round-robin arbitration, buffering, clock-domain crossing support, and memory-map based routing. Our work enhances the design with fault-awareness, runtime observability, and improved fairness between competing masters.
 
-2. Test Case 2: Matrix Congestion What we see: Around the 15-20µs window, the data bus (i_wch) shows high activity. The values change from 30201000 to 33231303 and 31211101. The Result: This demonstrates high-density traffic. The fact that the o_wready and o_wvalid signals remain stable during this period proves that the crossbar is successfully managing a "Full Matrix Swap" (all masters talking to all slaves) without stalling the entire fabric. The data integrity is maintained as these distinct, unique patterns pass through the switch.
+# Original Crossbar Features
 
-3. Test Case 3: Extreme Backpressure (Stalls) What we see: Look at the o_bvalid and o_bready signals toward the end (20-25µs). You see the values toggling between 1, 8, 0, and e (1110 in binary). The Result: This is the most important part of your waveform. The toggling on o_bvalid is the slave telling the master, "I am finishing my write, but I am slow (due to the backpressure weight you added)." The crossbar is successfully passing this "Wait" signal back to the masters. This confirms that the Pipeline Stall mechanism is working—the crossbar is correctly exerting backpressure to prevent the masters from flooding the system while the slaves are busy.
+Configurable M×N master/slave interfaces
+AXI4 and AXI4-Lite support
+Master/slave buffering capability
+Configurable outstanding transaction depth
+Clock Domain Crossing (CDC) support
+Round-robin arbitration
+Configurable priority levels
+Memory-map based routing
+Access restriction through routing tables
+USER signal support on all AXI channels
 
-<img width="1245" height="591" alt="17821566060263223422101727464500" src="https://github.com/user-attachments/assets/b519d060-f683-4b6d-82e0-8276b73d6e2b" />
-<img width="1249" height="584" alt="17821566337411605014827480866973" src="https://github.com/user-attachments/assets/87528275-a38d-4419-890d-2a02c7517d53" />
+# Architecture
+┌─────────────┬───┬──────────────────────────┬───┬─────────────┐
+│             │ S │                          │ S │             │
+│             └───┘                          └───┘             │
+│ ┌───────────────────────────┐  ┌───────────────────────────┐ │
+│ │      Slave Interface      │  │      Slave Interface      │ │
+│ └───────────────────────────┘  └───────────────────────────┘ │
+│               │                              │               │
+│               ▼                              ▼               │
+│ ┌──────────────────────────────────────────────────────────┐ │
+│ │                         Crossbar                         │ │
+│ └──────────────────────────────────────────────────────────┘ │
+│               │                              │               │
+│               ▼                              ▼               │
+│ ┌───────────────────────────┐  ┌───────────────────────────┐ │
+│ │     Master Interface      │  │     Master Interface      │ │
+│ └───────────────────────────┘  └───────────────────────────┘ │
+│             ┌───┐                          ┌───┐             │
+│             │ M │                          │ M │             │
+└─────────────┴───┴──────────────────────────┴───┴─────────────┘
+
+# Design Enhancements
+
+The following modules were developed and integrated into the crossbar architecture:
+
+axicb_req_logger.sv
+axicb_resp_monitor.sv
+axicb_fairness_arbiter.sv
+
+These additions improve:
+
+- Fairness among competing masters
+- Runtime traffic visibility
+- Error det- ction and monitoring
+- Fault recovery thr- ugh timeouts
+- Debugging and performance analysis
+
+# 1. Request Logger (axicb_req_logger.sv)
+
+# Motivation
+
+The original design lacked visibility into traffic patterns and request distribution among masters.
+
+# Implementation
+
+The logger passively monitors:
+
+AWVALID && AWREADY
+ARVALID && ARREADY
+
+for each master interface.
+
+Whenever a successful address handshake occurs, the corresponding request counter is incremented.
+
+# Outputs
+
+req_count[i]
+
+A monitoring window may be reset using:
+
+window_clear
+
+# Benefits
+
+- Traffic profilin- 
+- Runtime statistics collection
+- Arbitration analysis
+- Performance debugging
 
